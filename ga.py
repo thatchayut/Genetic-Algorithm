@@ -38,6 +38,7 @@ def main():
 
     # get data for each fold
     for test_sample_index in range(0, num_of_chunks):
+        print("\n------------------------------------------ K : " + str(test_sample_index + 1) + " --------------------------------")
         test_sample = chunk_sample[test_sample_index]
         train_sample = []
         # select training data from all data by excluding testing data
@@ -50,10 +51,11 @@ def main():
         file_training_input = pd.read_csv("wdbc_input.csv", usecols = train_sample)
         file_training_output = pd.read_csv("wdbc_output.csv", usecols = train_sample)
         # print(len(file_training_input.columns))
-
+     
         # create list of training data 
+        num_of_samples = len(file_training_input.columns)
         list_training_input = []
-        for column in range(0, len(file_training_input.columns)):
+        for column in range(0, num_of_samples):
             list_each_sample = []
             for element in file_training_input.iloc[:, column]:
                 list_each_sample.append(element)
@@ -61,7 +63,7 @@ def main():
         # print(list_training_input)
         
         list_training_output = []
-        for column in range(0, len(file_training_output.columns)):
+        for column in range(0, num_of_samples):
             list_each_sample = []
             for element in file_training_output.iloc[:, column]:
                 if (element == "M"):
@@ -69,6 +71,13 @@ def main():
                 elif (element == "B"):
                     list_each_sample.append(0)
             list_training_output.append(list_each_sample)
+        
+        # create all individuals in this population
+        individuals = {}
+        for i in range(0, num_of_samples):
+            key = i
+            value = process.createIndividual(num_of_hidden_layers, num_of_nodes_in_hidden_layer)
+            individuals[key] = value
         
 
     
