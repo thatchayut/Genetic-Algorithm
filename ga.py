@@ -85,6 +85,8 @@ def main():
             value = process.createIndividual(num_of_hidden_layers, num_of_nodes_in_hidden_layer)
             individuals[key] = value
         
+        # create a list to record output from each node
+        list_all_Y = process.createY(num_of_hidden_layers, num_of_nodes_in_hidden_layer)
         # find fitness function by forwarding
         # print("Architecture : " + str(individuals[0]))
         # print("list_training_input : " + str(list_training_input[0]))

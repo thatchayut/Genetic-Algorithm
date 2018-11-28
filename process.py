@@ -88,6 +88,21 @@ def createIndividual(num_of_hidden_layers, num_of_nodes_in_hidden_layer, num_of_
     list_all_weight.append(list_weight_hidden_output)
     return list_all_weight
 
+def createY(num_of_hidden_layers, num_of_nodes_in_hidden_layer, num_of_input = 30, num_of_output = 1):
+    list_Y_hidden = []
+    for layer_index in range(0, num_of_hidden_layers):
+        list_Y_each_layer = np.zeros(num_of_nodes_in_hidden_layer[layer_index])
+        list_Y_hidden.append(list_Y_each_layer)
+    list_Y_output = []
+    for node_index in range(0, num_of_output):
+        list_Y_each_layer = np.zeros(num_of_output)
+        list_Y_output.append(list_Y_each_layer)
+    list_all_Y = []
+    list_all_Y.extend(list_Y_hidden)
+    list_all_Y.extend(list_Y_output)
+    return list_all_Y
+            
+
 def scaling(list_input):
     max_value = max(list_input)
     min_value = min(list_input)
