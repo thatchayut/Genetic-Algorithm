@@ -87,3 +87,13 @@ def createIndividual(num_of_hidden_layers, num_of_nodes_in_hidden_layer, num_of_
     list_all_weight.extend(list_weight_hidden_hidden)
     list_all_weight.append(list_weight_hidden_output)
     return list_all_weight
+
+def scaling(list_input):
+    max_value = max(list_input)
+    min_value = min(list_input)
+    list_result = []
+    for element in list_input:
+        result = (element - min_value) / (max_value - min_value)
+        result = round(result, 7)
+        list_result.append(result)
+    return list_result

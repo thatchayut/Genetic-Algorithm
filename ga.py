@@ -71,13 +71,24 @@ def main():
                 elif (element == "B"):
                     list_each_sample.append(0)
             list_training_output.append(list_each_sample)
-        
+    
+        # scaling input to be in range (-1, 1)
+        list_training_input_normalized = []
+        for sample in list_training_input:
+            result = process.scaling(sample)
+            list_training_input_normalized.append(result)    
+
         # create all individuals in this population
         individuals = {}
         for i in range(0, num_of_samples):
             key = i
             value = process.createIndividual(num_of_hidden_layers, num_of_nodes_in_hidden_layer)
             individuals[key] = value
+        
+        # find fitness function by forwarding
+        # print("Architecture : " + str(individuals[0]))
+        # print("list_training_input : " + str(list_training_input[0]))
+        # print("input_size : " + str(len(list_training_input[0])))
         
 
     
