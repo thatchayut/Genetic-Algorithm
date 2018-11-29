@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 # ask for required value
 def getInput(list_input_name):  
@@ -88,6 +89,7 @@ def createIndividual(num_of_hidden_layers, num_of_nodes_in_hidden_layer, num_of_
     list_all_weight.append(list_weight_hidden_output)
     return list_all_weight
 
+# create output from each node in network
 def createY(num_of_hidden_layers, num_of_nodes_in_hidden_layer, num_of_input = 30, num_of_output = 1):
     list_Y_hidden = []
     for layer_index in range(0, num_of_hidden_layers):
@@ -100,8 +102,7 @@ def createY(num_of_hidden_layers, num_of_nodes_in_hidden_layer, num_of_input = 3
     list_all_Y = []
     list_all_Y.extend(list_Y_hidden)
     list_all_Y.extend(list_Y_output)
-    return list_all_Y
-            
+    return list_all_Y         
 
 def scaling(list_input):
     max_value = max(list_input)
@@ -112,3 +113,12 @@ def scaling(list_input):
         result = round(result, 7)
         list_result.append(result)
     return list_result
+
+def sigmoid(x):
+    # if (x < 0):
+    result = (1 / (1 + math.exp(x)))
+    result = round(result, 7)
+    # elif (x >= 0):
+        # result = (1 / (1 + math.exp(-x)))
+        # result = round(result, 7)
+    return result

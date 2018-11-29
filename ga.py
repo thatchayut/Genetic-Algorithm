@@ -77,7 +77,7 @@ def main():
         for sample in list_training_input:
             result = process.scaling(sample)
             list_training_input_normalized.append(result)    
-
+        print("list training normalized = " + str(list_training_input_normalized[0])) 
         # create all individuals in this population
         individuals = {}
         for i in range(0, num_of_samples):
@@ -87,10 +87,60 @@ def main():
         
         # create a list to record output from each node
         list_all_Y = process.createY(num_of_hidden_layers, num_of_nodes_in_hidden_layer)
+
+        print(individuals[0])
+        print(len(individuals[0]))
+        print()
+        print(list_all_Y)
+        print(len(list_all_Y))
+        print("testttttttttttttt")
+        print(individuals[0][0][0][0])
         # find fitness function by forwarding
         # print("Architecture : " + str(individuals[0]))
-        # print("list_training_input : " + str(list_training_input[0]))
-        # print("input_size : " + str(len(list_training_input[0])))
+
+        # calcualte output for each node in hidden layers
+        for layer_index in range(0, num_of_hidden_layers):
+            for node_index in range(0, num_of_nodes_in_hidden_layer[layer_index]):
+                result = 0
+                # weight index is between 1 to len(individuals) because weight_index '0' is weight bias
+                num_of_weight = len(individuals[0][layer_index][node_index])
+                for weight_index in range(1, num_of_weight):
+                    # for node in the 1st hidden layer
+                    if (layer_index == 0):
+                        # index of list_training_input_normalized must be the same index as the one for an individual
+                        for element in list_training_input_normalized[0]:
+                            result += (element * individuals[0][layer_index][node_index][weight_index])
+                    # for other layers
+                    else:
+                        # y_this_node = sum(y_previous_node * weight_to_this_node)
+                        for element in list_all_Y[layer_index - 1]:
+                            result += (element * individuals[0][layer_index][node_index][weight_index])
+                # add bias to result (weight_index '0' is weight bias)
+                result += individuals[0][layer_index][node_index][0]
+                # apply activation function to result
+                result = process.sigmoid(result)
+                list_all_Y[layer_index][node_index] = result
+        # print("result")
+        # print(list_all_Y)
+        # calculate output for output layer
+        num_of_output = 1
+        last_hidden_layer_index = len(individuals[0]) - 2
+        # print(last_hidden_layer_index)
+        last_layer_index = len(individuals[0]) - 1
+        # print(last_layer_index)
+        for output_index in range(0, num_of_output):
+            # output = sum(y_previous_node * weight_to_this_node)
+            result = 0
+            for weight_index in  range(0, len(individuals[0][last_hidden_layer_index][output_index])):
+                for element in list_all_Y[len(list_all_Y) - 1]:
+                    result += (element * individuals[0][last_hidden_layer_index][output_index][weight_index])
+            # add bias to result (weight_index '0' is weight bias)
+            result += individuals[0][last_layer_index][output_index][0]
+            # print(individuals[0][last_layer_index][output_index][0])
+            result = process.sigmoid(result)
+            list_all_Y[last_layer_index][output_index] = result
+        print(list_all_Y)
+
         
 
     
