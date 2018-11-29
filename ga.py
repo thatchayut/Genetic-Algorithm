@@ -99,9 +99,12 @@ def main():
         # find fitness function by forwarding
         # print("Architecture : " + str(individuals[0]))
 
+        # ADJUST EPOCH FROM HERE!!!!!!!!!!!!!!!!
+
         # Forwarding
         # calculate fitness value of each individual
-        list_error = np.zeros(num_of_samples)
+        list_fitness = np.zeros(num_of_samples)
+        list_result = []
         for i in range(0, num_of_samples):
             # calcualte output for each node in hidden layers
             for layer_index in range(0, num_of_hidden_layers):
@@ -152,10 +155,17 @@ def main():
             error = abs(desired_output[0] - actual_output[0])
             # print("Error : " + str(error))
             fitness_value = (1 / error)
-            # fitness_value = round(fitness_value, 5)
+            fitness_value = round(fitness_value, 7)
             # print("Fitness value : " + str(fitness_value))
-            list_error[i] = fitness_value
-        print("list_error : " + str(list_error))
+            list_fitness[i] = fitness_value
+            list_fitness = list(list_fitness)
+        # print("list_fitness : " + str(list_fitness))
+        max_fitness_index = list_fitness.index(max(list_fitness))
+        # print(max_fitness_index)
+        print()
+        print("#### Result ####")
+        print("Maximun finess value in this fold : " + str(list_fitness[max_fitness_index]))
+        print("Optimal Structure in this fold : " + str(individuals[max_fitness_index]))
 
 if __name__ == '__main__':
     main()
