@@ -13,7 +13,7 @@
   
   This program is used **only for _educational_ purpose**. This program is initially created on the basis of educational purpose to simulate and analyze process of genetic algorithm. 
   
- ##How to run this program?
+ ## How to run this program?
   ```
   python ga.py
   ```
