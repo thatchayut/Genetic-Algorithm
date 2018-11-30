@@ -28,15 +28,6 @@ def main():
     chunk_sample = list(process.chunks(list_input_name, chunk_size))
     num_of_chunks = len(chunk_sample)
 
-    # individual_1 = process.createIndividual(num_of_hidden_layers, num_of_nodes_in_hidden_layer)
-
-    # individual = {}
-    # for i in range(0,5):
-    #     key = i
-    #     value = process.createIndividual(num_of_hidden_layers, num_of_nodes_in_hidden_layer)
-    #     individual[key] = value
-    # print(individual)
-
     # get data for each fold
     for test_sample_index in range(0, num_of_chunks):
         print("\n------------------------------------------ K : " + str(test_sample_index + 1) + " --------------------------------")
@@ -89,16 +80,6 @@ def main():
         
         # create a list to record output from each node
         list_all_Y = process.createY(num_of_hidden_layers, num_of_nodes_in_hidden_layer)
-
-        # print(individuals[0])
-        # print(len(individuals[0]))
-        # print()
-        # print(list_all_Y)
-        # print(len(list_all_Y))
-        # print("testttttttttttttt")
-        # print(individuals[0][0][0][0])
-        # find fitness function by forwarding
-        # print("Architecture : " + str(individuals[0]))
 
         # ADJUST EPOCH FROM HERE!!!!!!!!!!!!!!!!
 
