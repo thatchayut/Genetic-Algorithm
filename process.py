@@ -115,10 +115,6 @@ def scaling(list_input):
     return list_result
 
 def sigmoid(x):
-    # if (x < 0):
     result = (1 / (1 + math.exp(x)))
     result = round(result, 7)
-    # elif (x >= 0):
-        # result = (1 / (1 + math.exp(-x)))
-        # result = round(result, 7)
     return result

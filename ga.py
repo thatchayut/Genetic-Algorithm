@@ -67,7 +67,6 @@ def main():
         # get data to train
         file_training_input = pd.read_csv("wdbc_input.csv", usecols = train_sample)
         file_training_output = pd.read_csv("wdbc_output.csv", usecols = train_sample)
-        # print(len(file_training_input.columns))
      
         # create list of training data 
         num_of_samples = len(file_training_input.columns)
@@ -78,7 +77,6 @@ def main():
             for element in file_training_input.iloc[:, column]:
                 list_each_sample.append(element)
             list_training_input.append(list_each_sample)
-        # print(list_training_input)
         
         list_training_output = []
         for column in range(0, num_of_samples):
@@ -96,6 +94,7 @@ def main():
             result = process.scaling(sample)
             list_training_input_normalized.append(result)    
         print("list training normalized = " + str(list_training_input_normalized[0])) 
+
         # create all individuals in this population
         individuals = {}
         for i in range(0, num_of_samples):
@@ -134,14 +133,11 @@ def main():
                         # apply activation function to result
                         result = process.sigmoid(result)
                         list_all_Y[layer_index][node_index] = result
-                # print("result")
-                # print(list_all_Y)
+
                 # calculate output for output layer
                 num_of_output = 1
                 last_hidden_layer_index = len(individuals[i]) - 2
-                # print(last_hidden_layer_index)
                 last_layer_index = len(individuals[i]) - 1
-                # print(last_layer_index)
                 for output_index in range(0, num_of_output):
                     # output = sum(y_previous_node * weight_to_this_node)
                     result = 0
@@ -150,10 +146,8 @@ def main():
                             result += (element * individuals[i][last_hidden_layer_index][output_index][weight_index])
                     # add bias to result (weight_index '0' is weight bias)
                     result += individuals[i][last_layer_index][output_index][0]
-                    # print(individuals[0][last_layer_index][output_index][0])
                     result = process.sigmoid(result)
                     list_all_Y[last_layer_index][output_index] = result
-                # print(list_all_Y)
                 actual_output = list_all_Y[last_layer_index]
                 desired_output = list_training_output[i]
 
@@ -212,7 +206,6 @@ def main():
                         individuals[index_first_individual] = temp_individuals_1
             
             # Mutation
-            # mutate_prob = 0.01
             num_of_mutation = math.ceil(num_of_samples * mutate_prob)
             print("num_of_mutation = " + str(num_of_mutation))
             # random individuals to mutate
@@ -226,7 +219,6 @@ def main():
                         count += 1
                         print(count)
                         break
-            # print("Individual to be mutated : " + str(list_individual_to_mutate))
 
             # Mutate individuals
             for i in range(0, len(list_individual_to_mutate)):
@@ -255,13 +247,8 @@ def main():
                     # Random new set of weight
                     print(individuals[individual_index])
                     num_of_node_to_mutate = len(individuals[individual_index][random_layer_index][random_node_index])
-                    # print("random_layer_index : " + str(random_layer_index))
-                    # print("num_of_node_in_hidden_layer = " + str(num_of_nodes_in_hidden_layer))
-                    # print("num of nodes : " + str(num_of_node_to_mutate))
                     random_new_weight = np.random.uniform(low = -1.0, high = 1.0, size = num_of_node_to_mutate)
-                    # print("random_new_weight = " + str(random_new_weight))
                     # Mutate
-                    # individual_index = list_individual_to_mutate[i]
                     print("BEFORE: " + str(individuals[individual_index][random_layer_index][random_node_index]))
                     individuals[individual_index][random_layer_index][random_node_index] = random_new_weight
                     print("AFTER : " + str(individuals[individual_index][random_layer_index][random_node_index]))
@@ -330,9 +317,7 @@ def main():
             # calculate output for output layer
             num_of_output = 1
             last_hidden_layer_index = len(individuals[i]) - 2
-            # print(last_hidden_layer_index)
             last_layer_index = len(individuals[i]) - 1
-            # print(last_layer_index)
             for output_index in range(0, num_of_output):
                 # output = sum(y_previous_node * weight_to_this_node)
                 result = 0
@@ -341,19 +326,15 @@ def main():
                         result += (element * individuals[i][last_hidden_layer_index][output_index][weight_index])
                 # add bias to result (weight_index '0' is weight bias)
                 result += individuals[i][last_layer_index][output_index][0]
-                # print(individuals[0][last_layer_index][output_index][0])
                 result = process.sigmoid(result)
                 list_all_Y[last_layer_index][output_index] = result
-            # print(list_all_Y)
             actual_output = list_all_Y[last_layer_index]
             desired_output = list_training_output[i]
             # calculate error
             error = abs(desired_output[0] - actual_output[0])
-            # print("Error : " + str(error))
             # calculate fitness value
             fitness_value = (1 / error)
             fitness_value = round(fitness_value, 7)
-            # print("Fitness value : " + str(fitness_value))
             list_fitness[i] = fitness_value
             list_fitness = list(list_fitness)
 
@@ -365,11 +346,8 @@ def main():
                 converted_output = 1
                 list_result.extend(str(converted_output))
         max_fitness_index = list_fitness.index(max(list_fitness))
-        # print(max_fitness_index)
         print("Actual output : " + str(list_result))
         print("Desired output : " + str(list_training_output))
-        # print(list_result[0])
-        # print(list_training_output[0][0])
 
         # Evaluation
         count_match = 0
