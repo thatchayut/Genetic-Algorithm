@@ -5,9 +5,10 @@ import random
 import process
 import math
 import copy
+import time
 
 def main():
-
+    start_time = time.time()
     # get required value
     while True:
         mutate_prob = input("Mutatation probability : ")
@@ -25,6 +26,9 @@ def main():
             print("WARNING : Number of generation must be positive number")
         else:
             break
+
+    output_file_name = input("Output file name : ")
+    output_file = open(str(output_file_name) + ".txt", "w+")
 
     mutate_prob = float(mutate_prob)
     num_of_gen = int(num_of_gen)
@@ -52,13 +56,13 @@ def main():
     # get data for each fold
     for test_sample_index in range(0, num_of_chunks):
         print("\n------------------------------------------ K : " + str(test_sample_index + 1) + " --------------------------------")
+        output_file.write("#################################### K : " + str(test_sample_index + 1) + " ####################################\n")
         test_sample = chunk_sample[test_sample_index]
         train_sample = []
         # select training data from all data by excluding testing data
         for train_sample_index in range(0, num_of_chunks):
             if (chunk_sample[train_sample_index] is not test_sample):
                 train_sample.extend(chunk_sample[train_sample_index])
-            # print(train_sample)
 
         # get data to train
         file_training_input = pd.read_csv("wdbc_input.csv", usecols = train_sample)
@@ -167,7 +171,7 @@ def main():
                 list_individual_to_be_mated = []
                 for i in range(0,num_individuals_in_mating):
                     while True:
-                        individual = random.randint(0, num_of_samples)
+                        individual = random.randint(0, num_of_samples - 1)
                         if individual not in list_individual_to_be_mated:
                             list_individual_to_be_mated.append(individual)
                             break
@@ -189,39 +193,45 @@ def main():
 
                 # conducting crossover
                 for pair_index in range(0, len(list_paired_individuals)):
-                    # index of individual in a pair
-                    index_first_individual = list_paired_individuals[pair_index][0]
-                    index_second_individual = list_paired_individuals[pair_index][1]
-                    # crossing site of each individual
-                    crossing_site_first_individual = list_paired_crossing_site[pair_index][0]
-                    crossing_site_second_individual = list_paired_crossing_site[pair_index][1]
-                    # create dummy used in swapping process
-                    temp_individuals_1 = copy.deepcopy(individuals[index_first_individual])
-                    temp_individuals_2 = copy.deepcopy(individuals[index_second_individual])
-                    # swap weight after crossing site to others
-                    for i in range(crossing_site_first_individual, len(temp_individuals_1)):
-                        temp_individuals_2[i] = individuals[index_first_individual][i]         
-                    for i in range(crossing_site_second_individual, len(temp_individuals_2)):
-                        temp_individuals_1[i] = individuals[index_second_individual][i]
-                    individuals[index_second_individual] = temp_individuals_2    
-                    individuals[index_first_individual] = temp_individuals_1
+                    if (list_paired_individuals[pair_index][0] != list_paired_individuals[pair_index][1]):
+                        # index of individual in a pair
+                        index_first_individual = list_paired_individuals[pair_index][0]
+                        index_second_individual = list_paired_individuals[pair_index][1]
+                        # crossing site of each individual
+                        crossing_site_first_individual = list_paired_crossing_site[pair_index][0]
+                        crossing_site_second_individual = list_paired_crossing_site[pair_index][1]
+                        # create dummy used in swapping process
+                        temp_individuals_1 = copy.deepcopy(individuals[index_first_individual])
+                        temp_individuals_2 = copy.deepcopy(individuals[index_second_individual])
+                        # swap weight after crossing site to others
+                        for i in range(crossing_site_first_individual, len(temp_individuals_1)):
+                            temp_individuals_2[i] = individuals[index_first_individual][i]         
+                        for i in range(crossing_site_second_individual, len(temp_individuals_2)):
+                            temp_individuals_1[i] = individuals[index_second_individual][i]
+                        individuals[index_second_individual] = temp_individuals_2    
+                        individuals[index_first_individual] = temp_individuals_1
             
             # Mutation
             # mutate_prob = 0.01
-            num_of_mutation = math.ceil(num_of_hidden_layers * num_of_samples * mutate_prob)
+            num_of_mutation = math.ceil(num_of_samples * mutate_prob)
+            print("num_of_mutation = " + str(num_of_mutation))
             # random individuals to mutate
             list_individual_to_mutate = []
+            count = 0
             for i in range(0, num_of_mutation):
                 while True:
-                    individual = random.randint(0, num_of_samples)
-                    if individual not in list_individual_to_mutate:
+                    individual = random.randint(0, num_of_samples - 1)
+                    if (individual not in list_individual_to_mutate):
                         list_individual_to_mutate.append(individual)
+                        count += 1
+                        print(count)
                         break
             # print("Individual to be mutated : " + str(list_individual_to_mutate))
 
             # Mutate individuals
             for i in range(0, len(list_individual_to_mutate)):
                 individual_index = list_individual_to_mutate[i]
+                print("individual_index = " + str(individual_index))
                 # Random layer to mutate in each individual
                 random_layer_index = random.randint(0, num_of_hidden_layers)
                 random_node_index = None
@@ -243,6 +253,7 @@ def main():
                     #change random index to fit with num_of_node_in_hidden_layer
                     random_layer_index  -= random_layer_index
                     # Random new set of weight
+                    print(individuals[individual_index])
                     num_of_node_to_mutate = len(individuals[individual_index][random_layer_index][random_node_index])
                     # print("random_layer_index : " + str(random_layer_index))
                     # print("num_of_node_in_hidden_layer = " + str(num_of_nodes_in_hidden_layer))
@@ -371,6 +382,25 @@ def main():
         print("Accuracy : " + str(accuracy) + " %")
         print("Maximun fitness value in this fold : " + str(list_fitness[max_fitness_index]))
         print("Optimal Structure in this fold : " + str(individuals[max_fitness_index]))
+        
+        # change format of out put to be written to log file
+        list_output_to_log = []
+        for i in range(0, len(list_result)):
+            list_output_to_log.append(list_training_output[i][0])
+        # write output to log file
+        output_file.write("Actual output : \n")
+        output_file.write(str(list_result) + "\n")
+        output_file.write("Desire output : " + "\n")
+        output_file.write(str(list_output_to_log) + "\n")
+        output_file.write("Accuracy : " + str(accuracy) + " %\n")
+        output_file.write("Maximun fitness value of this fold : " + str(list_fitness[max_fitness_index]) + "\n")
+        output_file.write("Optimal Structure in this fold : " + str(individuals[max_fitness_index]) + "\n")
+    end_time = time.time()
+    elapse_time_sec = end_time - start_time
+    elapse_time_min = (elapse_time_sec / 60)
+    elapse_time_min = round(elapse_time_min, 5)
+    print("Total time elapse : " + str(elapse_time_min) + " minutes")
+    output_file.write("\n Total elapse time : " + str(elapse_time_min) + " minutes")
 
 if __name__ == '__main__':
     main()
