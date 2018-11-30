@@ -4,6 +4,7 @@ import numpy as np
 import random
 import process
 import math
+import copy
 
 def main():
 
@@ -27,7 +28,7 @@ def main():
     chunk_sample = list(process.chunks(list_input_name, chunk_size))
     num_of_chunks = len(chunk_sample)
 
-    individual_1 = process.createIndividual(num_of_hidden_layers, num_of_nodes_in_hidden_layer)
+    # individual_1 = process.createIndividual(num_of_hidden_layers, num_of_nodes_in_hidden_layer)
 
     # individual = {}
     # for i in range(0,5):
@@ -166,6 +167,59 @@ def main():
         print("#### Result ####")
         print("Maximun finess value in this fold : " + str(list_fitness[max_fitness_index]))
         print("Optimal Structure in this fold : " + str(individuals[max_fitness_index]))
+
+        # crossover
+        # random number of individuals to be added to a mating pool
+        num_individuals_in_mating = None
+        while True:
+            num_individuals_in_mating = random.randint(0, 10)
+            if ((num_individuals_in_mating % 2) == 0):
+                break
+        print("Size of mating pool : " + str(num_individuals_in_mating))
+        
+        if (num_individuals_in_mating is not 0):
+            # random individuals to be used as crossover elements
+            list_individual_to_be_mated = []
+            for i in range(0,num_individuals_in_mating):
+                while True:
+                    individual = random.randint(0, num_of_samples)
+                    if individual not in list_individual_to_be_mated:
+                        list_individual_to_be_mated.append(individual)
+                        break
+            print("Individuals in mating pool : " + str(list_individual_to_be_mated)) 
+
+            # random crossing site for each individual in mating pool from 1 to number of layers in network
+            list_crossing_site = []
+            for i in range(0, num_individuals_in_mating):
+                # random layer in each individuals to be a starting point for crossover (weight to first hidden layer and output layer are excluded)
+                crossing_site = random.randint(1, num_of_hidden_layers)
+                list_crossing_site.append(crossing_site)
+            print("Crossing site for each individual : " + str(list_crossing_site))
+
+            # paring individuals in mating pool
+            list_paired_individuals = list(process.chunks(list_individual_to_be_mated, 2))
+            list_paired_crossing_site = list(process.chunks(list_crossing_site, 2))
+            print(list_paired_individuals)
+            print(list_paired_crossing_site)
+
+            # conducting crossover
+            for pair_index in range(0, len(list_paired_individuals)):
+                # index of individual in a pair
+                index_first_individual = list_paired_individuals[pair_index][0]
+                index_second_individual = list_paired_individuals[pair_index][1]
+                # crossing site of each individual
+                crossing_site_first_individual = list_paired_crossing_site[pair_index][0]
+                crossing_site_second_individual = list_paired_crossing_site[pair_index][1]
+                # create dummy used in swapping process
+                temp_individuals_1 = copy.deepcopy(individuals[index_first_individual])
+                temp_individuals_2 = copy.deepcopy(individuals[index_second_individual])
+                # swap weight after crossing site to others
+                for i in range(crossing_site_first_individual, len(temp_individuals_1)):
+                    temp_individuals_2[i] = individuals[index_first_individual][i]         
+                for i in range(crossing_site_second_individual, len(temp_individuals_2)):
+                    temp_individuals_1[i] = individuals[index_second_individual][i]
+                individuals[index_second_individual] = temp_individuals_2    
+                individuals[index_first_individual] = temp_individuals_1
 
 if __name__ == '__main__':
     main()
