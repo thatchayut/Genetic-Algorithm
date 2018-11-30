@@ -220,6 +220,31 @@ def main():
                     temp_individuals_1[i] = individuals[index_second_individual][i]
                 individuals[index_second_individual] = temp_individuals_2    
                 individuals[index_first_individual] = temp_individuals_1
+        
+        # Mutation
+        mutate_prob = 0.01
+        num_of_mutation = math.ceil(num_of_hidden_layers * num_of_samples * mutate_prob)
+        # random individuals to mutate
+        list_individual_to_mutate = []
+        for i in range(0, num_of_mutation):
+            while True:
+                individual = random.randint(0, num_of_samples)
+                if individual not in list_individual_to_mutate:
+                    list_individual_to_mutate.append(individual)
+                    break
+        # print("Individual to be mutated : " + str(list_individual_to_mutate))
+
+        # Mutate individuals
+        for i in range(0, len(list_individual_to_mutate)):
+            individual_index = list_individual_to_mutate[i]
+            # Random layer to mutate in each individual
+            random_layer_index = random.randint(0, num_of_hidden_layers - 1)
+            # Random new set of weight
+            num_of_node_to_mutate = num_of_nodes_in_hidden_layer[random_layer_index]
+            random_new_weight = np.random.uniform(low = -1.0, high = 1.0, size = num_of_node_to_mutate)
+            # Mutate
+            # individual_index = list_individual_to_mutate[i]
+            individuals[individual_index][random_layer_index] = random_new_weight
 
 if __name__ == '__main__':
     main()
