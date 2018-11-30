@@ -8,7 +8,6 @@
   This program consists of 2 main parts that are *ga.py* and *process.py*.
   
   In *ga.py*, it provides main functions for this program(i.e. cross-validation, iterating thorugh generations, cross-over, mutation), 
-  
   and *process.py* provides functions to support *ga.py* such as sigmoid function, separating data, asking for input, feature scaling, and individuals creation. 
   
   This program is used **only for _educational_ purpose**. This program is initially created on the basis of educational purpose to simulate and analyze process of genetic algorithm. 
