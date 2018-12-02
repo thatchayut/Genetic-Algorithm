@@ -12,10 +12,10 @@ def main():
     # get required value
     while True:
         mutate_prob = input("Mutatation probability : ")
-        if (float(mutate_prob) > 1):
-            print("WARNING : Probability can not greater than 1.")
-        elif (float(mutate_prob) < 0):
-            print("WARNING : Probability must be positive number")
+        if (float(mutate_prob) > 0.01):
+            print("WARNING : Probability cannot greater than 0.01.")
+        elif (float(mutate_prob) < 0.001):
+            print("WARNING : Probability cannot lower than 0.001.")
         else:
             break
     while True:
@@ -206,7 +206,7 @@ def main():
                         individuals[index_first_individual] = temp_individuals_1
             
             # Mutation
-            num_of_mutation = math.ceil(num_of_samples * mutate_prob)
+            num_of_mutation = math.ceil(num_of_samples * mutate_prob * num_of_hidden_layers)
             print("num_of_mutation = " + str(num_of_mutation))
             # random individuals to mutate
             list_individual_to_mutate = []
